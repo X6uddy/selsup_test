@@ -1,26 +1,60 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useRef, useState } from 'react';
+import ParamEditor, { Model, Param, ParamValue } from './ParamEditor';
 
-function App() {
+// Пример использования компонента
+const App = () => {
+  const initialParams: Param[] = [
+    {
+      id: 1,
+      name: 'Назначение',
+      type: 'string',
+    },
+    {
+      id: 2,
+      name: 'Длина',
+      type: 'string',
+    },
+  ];
+
+  const initialModel = {
+    paramValues: [
+      {
+        paramId: 1,
+        value: 'повседневное',
+      },
+      {
+        paramId: 2,
+        value: 'макси',
+      },
+    ],
+  };
+
+  const [model, setModel] = useState<Model>(initialModel);
+  const editorRef = useRef<any>(null);
+
+  const handleUpdateModel = (updatedModel: Model) => {
+    setModel(updatedModel);
+  };
+
+  const handleGetModel = () => {
+    if (editorRef.current) {
+      const currentModel = editorRef.current.getModel();
+      console.log(currentModel);
+    }
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <h1>Редактор параметров</h1>
+      <ParamEditor
+        params={initialParams}
+        model={model}
+        onUpdateModel={handleUpdateModel}
+        ref={editorRef}
+      />
+      <button onClick={handleGetModel}>Получить текущую модель</button>
     </div>
   );
-}
+};
 
 export default App;
